@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+/* ── Концепция A «Ночной рейс» (утверждена Димой 17.11.2026) ─────────────────────
+   Тёмная тема «Ночь» по умолчанию, светлая «День» — те же роли цветов на светлых поверхностях.
+   Экраны используют только эти токены. Тема переключается атрибутом data-theme на <html>. */
+
+:root,
+:root[data-theme="night"] {
+  --mc-bg: #0a0c14;
+  --mc-surface: #121624;
+  --mc-surface-2: #1a2033;
+  --mc-line: #262d45;
+  --mc-text: #eef1fa;
+  --mc-muted: #8d96b2;
+  --mc-accent: #7c5cff;
+  --mc-accent-text: #a48fff; /* фиолетовый для мелкого текста: контраст ≥ 4.5:1 на тёмном */
+  --mc-accent-2: #22d3ee;
+  --mc-accent-soft: rgba(124, 92, 255, 0.16);
+  --mc-on-accent: #0a0c14;
+  --mc-warn: #ffb020;
+  --mc-warn-soft: rgba(255, 176, 32, 0.12);
+  --mc-ok: #2ee6a6;
+  --mc-ok-soft: rgba(46, 230, 166, 0.12);
+  --mc-danger: #ff6b7a;
+  --mc-danger-soft: rgba(255, 107, 122, 0.12);
+  --mc-glow-1: rgba(124, 92, 255, 0.28);
+  --mc-glow-2: rgba(34, 211, 238, 0.14);
+  --mc-pass-from: rgba(124, 92, 255, 0.22);
+  --mc-pass-to: rgba(34, 211, 238, 0.08);
+  --mc-pass-border: rgba(124, 92, 255, 0.45);
+  --mc-pass-shadow: 0 12px 40px rgba(124, 92, 255, 0.22);
+  --mc-nav: rgba(18, 22, 36, 0.88);
+  color-scheme: dark;
+}
+
+:root[data-theme="day"] {
+  --mc-bg: #f3f4fa;
+  --mc-surface: #ffffff;
+  --mc-surface-2: #eceef7;
+  --mc-line: #d9ddec;
+  --mc-text: #0e1220;
+  --mc-muted: #565f7c;
+  --mc-accent: #5b3df5;
+  --mc-accent-text: #4a2ee0;
+  --mc-accent-2: #0891b2;
+  --mc-accent-soft: rgba(91, 61, 245, 0.1);
+  --mc-on-accent: #ffffff;
+  --mc-warn: #a85600;
+  --mc-warn-soft: #fff1d9;
+  --mc-ok: #0b7a52;
+  --mc-ok-soft: #dcf6ea;
+  --mc-danger: #c0262d;
+  --mc-danger-soft: #fde4e4;
+  --mc-glow-1: rgba(91, 61, 245, 0.12);
+  --mc-glow-2: rgba(8, 145, 178, 0.08);
+  --mc-pass-from: rgba(91, 61, 245, 0.08);
+  --mc-pass-to: rgba(8, 145, 178, 0.04);
+  --mc-pass-border: rgba(91, 61, 245, 0.35);
+  --mc-pass-shadow: 0 10px 30px rgba(91, 61, 245, 0.12);
+  --mc-nav: rgba(255, 255, 255, 0.9);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--mc-bg);
+  --color-surface: var(--mc-surface);
+  --color-surface-2: var(--mc-surface-2);
+  --color-line: var(--mc-line);
+  --color-text: var(--mc-text);
+  --color-muted: var(--mc-muted);
+  --color-accent: var(--mc-accent);
+  --color-accent-text: var(--mc-accent-text);
+  --color-accent-2: var(--mc-accent-2);
+  --color-accent-soft: var(--mc-accent-soft);
+  --color-on-accent: var(--mc-on-accent);
+  --color-warn: var(--mc-warn);
+  --color-warn-soft: var(--mc-warn-soft);
+  --color-ok: var(--mc-ok);
+  --color-ok-soft: var(--mc-ok-soft);
+  --color-danger: var(--mc-danger);
+  --color-danger-soft: var(--mc-danger-soft);
+  --font-sans: "Onest Variable", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: "Unbounded Variable", "Onest Variable", system-ui, sans-serif;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  margin: 0;
+  min-height: 100dvh;
+  color: var(--mc-text);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  background-color: var(--mc-bg);
+  /* Сияние в углу экрана — фирменный приём концепции; закреплено, чтобы не «ездило» при прокрутке. */
+  background-image:
+    radial-gradient(120% 60% at 100% 0%, var(--mc-glow-1), transparent 60%),
+    radial-gradient(90% 50% at 0% 10%, var(--mc-glow-2), transparent 60%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+:focus-visible {
+  outline: 2px solid var(--mc-accent-2);
+  outline-offset: 2px;
+}
+::selection {
+  background: var(--mc-accent);
+  color: var(--mc-on-accent);
+}
+
+/* Градиент основных действий и аватара. */
+.mc-grad {
+  background-image: linear-gradient(135deg, var(--mc-accent), var(--mc-accent-2));
+  color: var(--mc-on-accent);
+}
+
+/* Посадочный талон следующей пары. */
+.mc-pass {
+  position: relative;
+  border-radius: 22px;
+  border: 1px solid var(--mc-pass-border);
+  background: linear-gradient(160deg, var(--mc-pass-from), var(--mc-pass-to) 60%), var(--mc-surface);
+  box-shadow: var(--mc-pass-shadow);
+}
+.mc-perf {
+  position: relative;
+  height: 0;
+  margin: 0 14px;
+  border-top: 2px dashed var(--mc-line);
+}
+.mc-perf::before,
+.mc-perf::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--mc-bg);
+  border: 1px solid var(--mc-pass-border);
+}
+.mc-perf::before { left: -24px; clip-path: inset(0 0 0 50%); }
+.mc-perf::after { right: -24px; clip-path: inset(0 50% 0 0); }
+.mc-route {
+  position: relative;
+  flex: 1;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--mc-muted) 0 4px, transparent 4px 9px);
+  opacity: 0.75;
+}
+.mc-route-dot {
+  position: absolute;
+  top: -4px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: var(--mc-accent-2);
+  box-shadow: 0 0 12px var(--mc-accent-2);
+}
+
+/* Плавающая нижняя навигация. */
+.mc-dock {
+  background: var(--mc-nav);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+.mc-tab-active {
+  color: var(--mc-text);
+  background: linear-gradient(160deg, rgba(124, 92, 255, 0.35), rgba(34, 211, 238, 0.14));
+}
+:root[data-theme="day"] .mc-tab-active {
+  background: linear-gradient(160deg, rgba(91, 61, 245, 0.16), rgba(8, 145, 178, 0.1));
+}
+
+/* Движение: мягкое появление карточек и пульс точки на маршруте. */
+@keyframes mc-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.mc-rise { animation: mc-rise 0.32s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.mc-rise-2 { animation-delay: 0.05s; }
+.mc-rise-3 { animation-delay: 0.1s; }
+.mc-rise-4 { animation-delay: 0.15s; }
+@keyframes mc-ping {
+  0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.55), 0 0 12px var(--mc-accent-2); }
+  100% { box-shadow: 0 0 0 10px rgba(34, 211, 238, 0), 0 0 12px var(--mc-accent-2); }
+}
+.mc-ping { animation: mc-ping 1.8s ease-out infinite; }
+@keyframes mc-pulse { 50% { opacity: 0.45; } }
+.mc-skeleton { animation: mc-pulse 1.4s ease-in-out infinite; background: var(--mc-surface-2); border-radius: 18px; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Остаются только смены прозрачности, без сдвигов и пульсации. */
+  .mc-rise { animation: mc-fade 0.2s linear both; }
+  .mc-ping, .mc-skeleton { animation: none; }
+  * { scroll-behavior: auto !important; }
+}
+@keyframes mc-fade { from { opacity: 0; } to { opacity: 1; } }

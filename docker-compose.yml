@@ -1,0 +1,23 @@
+# Локальная разработка: только PostgreSQL. Flask и Vite запускаются на хосте (см. README.md).
+# Пароль ниже — заглушка для локальной базы, наружу порт не публикуется (127.0.0.1).
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: campus
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-campus_local_only}
+      POSTGRES_DB: campus
+      TZ: Europe/Moscow
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - campus_pg:/var/lib/postgresql/data
+      - ./ops/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U campus -d campus"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  campus_pg:
