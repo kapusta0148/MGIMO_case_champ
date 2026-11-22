@@ -268,3 +268,174 @@ export interface Announcement {
   audience: string;
   author: string;
 }
+
+// ── Кабинет сотрудников ──────────────────────────────────────────────────────
+
+export interface StaffOwner {
+  id: number;
+  name: string;
+  group: string;
+  year: number;
+  faculty: string;
+  program: string;
+  recordBook: string;
+}
+
+export interface StaffRequestSummary extends RequestSummary {
+  owner: StaffOwner;
+  hoursOpen: number;
+  isStale: boolean;
+}
+
+export interface StaffRequestDetail extends RequestDetail {
+  owner: StaffOwner;
+  hoursOpen: number;
+  allowedTransitions: { status: RequestStatus; label: string; commentRequired: boolean }[];
+}
+
+export interface StaffSummary {
+  counts: Record<RequestStatus, number>;
+  open: number;
+  stale: number;
+  decidedLast30Days: number;
+  averageDecisionHours: number | null;
+  openByType: { type: string; title: string; count: number }[];
+  faculties: { code: string; name: string }[];
+  explanation: string;
+}
+
+export interface StaffGroup {
+  id: number;
+  name: string;
+  year: number;
+  faculty: string;
+  program: string;
+  students: number;
+}
+
+export interface StaffSchedule extends Schedule {
+  group: { id: number; name: string };
+  pairSlots: { number: number; start: string; end: string }[];
+}
+
+export interface StaffAnnouncement {
+  id: number;
+  title: string;
+  body: string;
+  publishedAt: string;
+  audience: string;
+  author: string;
+}
+
+export interface TeacherCourse {
+  id: number;
+  subject: string;
+  group: string;
+  faculty: string;
+  term: string;
+  isCurrent: boolean;
+  controlForm: string;
+  controlFormLabel: string;
+  students?: number;
+}
+
+export interface TeacherAssessment {
+  id: number;
+  kind: "control" | "final";
+  title: string;
+  position: number;
+  date: string | null;
+  score: number | null;
+  status: "graded" | "expected";
+  letter: string | null;
+  updatedAt: string;
+}
+
+export interface TeacherSheet {
+  course: TeacherCourse;
+  editable: boolean;
+  columns: { position: number; title: string }[];
+  students: {
+    userId: number;
+    name: string;
+    recordBook: string;
+    controls: TeacherAssessment[];
+    final: TeacherAssessment | null;
+    finalResult: GradeResult | null;
+    currentScore: number | null;
+  }[];
+}
+
+export interface AdminUser {
+  id: number;
+  username: string;
+  role: Role;
+  roleLabel: string;
+  fullName: string;
+  detail: string | null;
+  isActive: boolean;
+  isGenerated: boolean;
+  createdAt: string;
+  lastLoginAt: string | null;
+}
+
+export interface AuditItem {
+  id: number;
+  action: string;
+  actionLabel: string;
+  entityType: string;
+  entityId: number | null;
+  before: Record<string, unknown> | null;
+  after: Record<string, unknown> | null;
+  actor: { name: string; role: string };
+  createdAt: string;
+}
+
+// ── Планировщик ───────────────────────────────────────────────────────────────
+
+export interface PlannerBlock {
+  key: string;
+  title: string;
+  subject: string | null;
+  kindLabel: string;
+  date: string;
+  startsAt: string;
+  endsAt: string;
+  minutes: number;
+  dueAt: string;
+  deadlineId: number | null;
+  taskId: number | null;
+  atRisk: boolean;
+  reasons: string[];
+}
+
+export interface Planner {
+  generatedAt: string;
+  today: string;
+  method: "rules";
+  rules: string[];
+  blocks: PlannerBlock[];
+  warnings: { type: "not_enough_time" | "same_day" | "at_risk"; text: string }[];
+  days: {
+    date: string;
+    weekdayShort: string;
+    lessonsMinutes: number;
+    plannedMinutes: number;
+    suggestedMinutes: number;
+    freeMinutes: number;
+  }[];
+}
+
+export interface PersonalTask {
+  id: number;
+  title: string;
+  dueAt: string | null;
+  plannedStart: string | null;
+  plannedEnd: string | null;
+  estimatedMinutes: number | null;
+  deadlineId: number | null;
+  fromPlanner: boolean;
+  completed: boolean;
+  completedAt: string | null;
+  createdAt: string;
+}

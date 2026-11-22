@@ -1,0 +1,37 @@
+# Caddy сам получает и продлевает сертификат Let's Encrypt для SITE_HOST.
+SITE_HOST {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "same-origin"
+		-Server
+	}
+
+	# Файлы сборки с хешем в имени отдаёт сам Caddy и разрешает кешировать навсегда.
+	handle /assets/* {
+		root * /opt/campus/frontend/dist
+		header Cache-Control "public, max-age=31536000, immutable"
+		file_server
+	}
+
+	handle {
+		request_body {
+			max_size 7MB
+		}
+		reverse_proxy 127.0.0.1:8000
+	}
+
+	log {
+		output file /var/log/caddy/campus.log {
+			roll_size 10MiB
+			roll_keep 5
+		}
+	}
+}
+
+# Обращения по голому IP переводим на имя с сертификатом.
+http://SERVER_IP {
+	redir https://SITE_HOST{uri} permanent
+}

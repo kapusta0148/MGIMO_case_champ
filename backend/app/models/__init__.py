@@ -1,6 +1,6 @@
 """Все модели в одном месте, чтобы Alembic видел полную схему."""
 
-from .academics import Assessment, Course, Deadline, ExamEvent, Lesson, Subject, Teacher, Term
+from .academics import Assessment, Course, Deadline, ExamEvent, Lesson, PersonalTask, Subject, Teacher, Term
 from .comms import Announcement, Notification
 from .org import Faculty, Program, StudyGroup
 from .requests import Attachment, RequestEvent, ServiceRequest
@@ -20,6 +20,7 @@ __all__ = [
     "Faculty",
     "Lesson",
     "Notification",
+    "PersonalTask",
     "Program",
     "RateLimitEvent",
     "RequestEvent",

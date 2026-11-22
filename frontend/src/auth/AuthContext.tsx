@@ -88,4 +88,5 @@ export function useAuth() {
   return context;
 }
 
-export const homePath = (user: User) => (user.role === "student" ? "/today" : "/staff");
+export const homePath = (user: User) =>
+  ({ student: "/today", teacher: "/teacher", dean_staff: "/staff", admin: "/staff" })[user.role];

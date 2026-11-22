@@ -1,0 +1,11 @@
+[Unit]
+Description=MGIMO Campus: ежедневное обновление демо-событий (перенос, напоминания)
+After=postgresql.service
+
+[Service]
+Type=oneshot
+User=campus
+WorkingDirectory=/opt/campus/backend
+EnvironmentFile=/etc/campus/campus.env
+Environment=FLASK_APP=wsgi:app
+ExecStart=/opt/campus/venv/bin/flask demo refresh

@@ -203,7 +203,11 @@ def serialize_lesson(lesson: Lesson) -> dict:
 
 def week_payload(student: User, start: date, end: date) -> dict:
     """Расписание группы студента по дням за период [start; end]."""
-    group_id = student.student.group_id
+    return group_week_payload(student.student.group_id, start, end)
+
+
+def group_week_payload(group_id: int, start: date, end: date) -> dict:
+    """Расписание группы по дням. Одно и то же представление у студента и в кабинете деканата."""
     range_start, range_end = clock.day_bounds(start, end)
     lessons = lessons_between(group_id, range_start, range_end)
     moved_away = moved_away_between(group_id, range_start, range_end)
@@ -327,6 +331,25 @@ def cancel_lesson(lesson: Lesson, *, reason: str | None, actor: User | None) -> 
         lesson.original_room = lesson.room
     lesson.status = LESSON_CANCELLED
     lesson.change_reason = (reason or "").strip()[:300] or None
+    lesson.changed_at = clock.now()
+    lesson.changed_by_user_id = actor.id if actor else None
+    db.session.flush()
+    notifications.notify_lesson_change(lesson)
+    return lesson
+
+
+def restore_lesson(lesson: Lesson, *, actor: User | None) -> Lesson:
+    """Отменить перенос или отмену: вернуть занятию исходные время и аудиторию."""
+    from . import notifications
+
+    if lesson.status == LESSON_SCHEDULED or lesson.original_starts_at is None:
+        raise validation_error({"status": "Занятие и так идёт по расписанию."})
+    starts_at, ends_at = lesson.original_starts_at, lesson.original_ends_at
+    _ensure_free_slot(lesson, starts_at, ends_at)
+    lesson.starts_at, lesson.ends_at, lesson.room = starts_at, ends_at, lesson.original_room
+    lesson.original_starts_at = lesson.original_ends_at = lesson.original_room = None
+    lesson.status = LESSON_SCHEDULED
+    lesson.change_reason = None
     lesson.changed_at = clock.now()
     lesson.changed_by_user_id = actor.id if actor else None
     db.session.flush()

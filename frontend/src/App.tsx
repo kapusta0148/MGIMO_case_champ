@@ -2,13 +2,23 @@ import { Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import type { Role } from "./api/types";
 import { homePath, useAuth } from "./auth/AuthContext";
 import { StudentLayout } from "./components/Layout";
+import { StaffLayout } from "./components/StaffLayout";
 import { Button, Skeleton } from "./components/ui";
 import { GradesPage } from "./pages/Grades";
+import { PlannerPage } from "./pages/Planner";
 import { LoginPage } from "./pages/Login";
-import { AnnouncementPage, NotFoundPage, NotificationsPage, ProfilePage, StaffHomePage } from "./pages/Other";
+import { AnnouncementPage, NotFoundPage, NotificationsPage, ProfilePage } from "./pages/Other";
 import { RequestDetailPage, RequestNewPage, RequestsPage } from "./pages/Requests";
 import { SchedulePage } from "./pages/Schedule";
 import { TodayPage } from "./pages/Today";
+import { StaffOverviewPage, StaffRequestPage, StaffRequestsPage } from "./pages/staff/Requests";
+import { StaffAnnouncementsPage, StaffSchedulePage } from "./pages/staff/Schedule";
+import {
+  AdminAuditPage,
+  AdminUsersPage,
+  TeacherCoursePage,
+  TeacherCoursesPage,
+} from "./pages/staff/TeacherAdmin";
 
 /** Пускает только вошедших с подходящей ролью. Это удобство интерфейса: настоящая проверка — на сервере. */
 function Protected({ roles }: { roles: Role[] }) {
@@ -50,6 +60,7 @@ export function App() {
         <Route element={<StudentLayout />}>
           <Route path="/today" element={<TodayPage />} />
           <Route path="/schedule" element={<SchedulePage />} />
+          <Route path="/planner" element={<PlannerPage />} />
           <Route path="/grades" element={<GradesPage />} />
           <Route path="/requests" element={<RequestsPage />} />
           <Route path="/requests/new" element={<RequestNewPage />} />
@@ -59,8 +70,26 @@ export function App() {
           <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Route>
-      <Route element={<Protected roles={["dean_staff", "teacher", "admin"]} />}>
-        <Route path="/staff" element={<StaffHomePage />} />
+      <Route element={<Protected roles={["dean_staff", "admin"]} />}>
+        <Route element={<StaffLayout />}>
+          <Route path="/staff" element={<StaffOverviewPage />} />
+          <Route path="/staff/requests" element={<StaffRequestsPage />} />
+          <Route path="/staff/requests/:id" element={<StaffRequestPage />} />
+          <Route path="/staff/schedule" element={<StaffSchedulePage />} />
+          <Route path="/staff/announcements" element={<StaffAnnouncementsPage />} />
+        </Route>
+      </Route>
+      <Route element={<Protected roles={["admin"]} />}>
+        <Route element={<StaffLayout />}>
+          <Route path="/admin/users" element={<AdminUsersPage />} />
+          <Route path="/admin/audit" element={<AdminAuditPage />} />
+        </Route>
+      </Route>
+      <Route element={<Protected roles={["teacher"]} />}>
+        <Route element={<StaffLayout />}>
+          <Route path="/teacher" element={<TeacherCoursesPage />} />
+          <Route path="/teacher/courses/:id" element={<TeacherCoursePage />} />
+        </Route>
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

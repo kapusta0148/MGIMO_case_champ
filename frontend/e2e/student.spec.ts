@@ -56,7 +56,7 @@ test("главный сценарий: перенос из уведомлени�
   const lessonId = new URL(page.url()).searchParams.get("lesson");
   const card = page.locator(`#lesson-${lessonId}`);
   await expect(card).toBeVisible();
-  await expect(card).toContainText("Перенос");
+  await expect(card).toContainText(/Перенос|Другая аудитория/); // метка зависит от того, менялось ли время
   await expect(card).toContainText(newSlot); // одно и то же состояние в уведомлении и расписании
   await expectNoHorizontalScroll(page);
 
@@ -128,6 +128,7 @@ test("все разделы студента без горизонтальной
     "/schedule",
     "/schedule?view=day",
     "/schedule?view=deadlines",
+    "/planner",
     "/grades",
     "/requests",
     "/requests/new",
@@ -150,4 +151,36 @@ test("сотрудник не попадает в кабинет студент�
   await expect(page).toHaveURL(/\/staff$/);
   const status = await page.evaluate(async () => (await fetch("/api/me/dashboard")).status);
   expect(status).toBe(403);
+});
+
+test("планировщик: предложение попадает в задачи только по нажатию", async ({ page }) => {
+  await page.goto("/login");
+  await login(page, E2E.student1);
+  await expect(page).toHaveURL(/\/today$/);
+  await page.getByRole("link", { name: /План на неделю|Окно/ }).first().click();
+  await expect(page).toHaveURL(/\/planner$/);
+  await expect(page.getByRole("heading", { name: "План на неделю" })).toBeVisible();
+  await expect(page.getByText("алгоритм по правилам")).toBeVisible();
+  await expectNoHorizontalScroll(page);
+
+  const tasks = page.getByRole("region", { name: /Мои задачи/ }).or(page.locator("section[aria-labelledby=my-tasks]"));
+  const before = await tasks.locator("li").count();
+  const suggestion = page.locator("article").filter({ has: page.getByRole("button", { name: "Добавить в мои задачи" }) }).first();
+  const title = (await suggestion.locator("p").first().textContent())!.trim();
+  await suggestion.getByText("Почему так?").click();
+  await expect(suggestion.getByText(/^Срок — /)).toBeVisible();
+  await suggestion.getByRole("button", { name: "Добавить в мои задачи" }).click();
+
+  const row = tasks.locator("li").filter({ hasText: title });
+  await expect(row).toBeVisible();
+  await expect(row).toContainText("из плана");
+  expect(await tasks.locator("li").count()).toBe(before + 1);
+
+  await page.reload(); // задача хранится на сервере
+  await expect(row).toBeVisible();
+  await row.getByRole("checkbox").click();
+  await expect(row.getByRole("checkbox")).toHaveAttribute("aria-checked", "true");
+  await row.getByRole("button", { name: /Удалить/ }).click();
+  await expect(row).toHaveCount(0);
+  await expectNoHorizontalScroll(page);
 });

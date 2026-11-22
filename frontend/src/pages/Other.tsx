@@ -4,8 +4,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "../api/client";
 import { useAnnouncement, useMarkAllRead, useMarkRead, useNotifications } from "../api/hooks";
 import type { Notification, NotificationLink } from "../api/types";
-import { useAuth } from "../auth/AuthContext";
-import { Brand, PrototypeNote } from "../components/Layout";
+import { homePath, useAuth } from "../auth/AuthContext";
+import { PrototypeNote } from "../components/Layout";
 import { LessonCard } from "../components/LessonCard";
 import { Badge, Button, Card, cx, EmptyState, ErrorState, Kicker, PageTitle, Skeleton } from "../components/ui";
 import { dateTime } from "../lib/format";
@@ -244,26 +244,7 @@ export function ProfilePage() {
   );
 }
 
-// ── Сотрудники (заглушка до этапа P1) и служебные страницы ────────────────────
-
-export function StaffHomePage() {
-  const { user } = useAuth();
-  return (
-    <main className="mx-auto grid min-h-dvh w-full max-w-md content-center gap-4 px-4 py-8">
-      <Brand />
-      <Card>
-        <Kicker>{user?.roleLabel}</Kicker>
-        <p className="m-0 mt-1.5 text-lg font-bold">{user?.fullName}</p>
-        <p className="m-0 mt-2 text-sm text-muted">
-          Кабинет сотрудника (очередь заявок, объявления, переносы занятий, оценки) появится на следующем этапе
-          разработки. Вход и разграничение прав для этой роли уже работают.
-        </p>
-      </Card>
-      <LogoutButton />
-      <PrototypeNote />
-    </main>
-  );
-}
+// ── Служебные страницы ───────────────────────────────────────────────────────
 
 export function NotFoundPage() {
   const { user } = useAuth();
@@ -273,7 +254,7 @@ export function NotFoundPage() {
       <h1 className="m-0 text-xl font-bold">Такой страницы нет</h1>
       <p className="m-0 text-sm text-muted">Возможно, ссылка устарела или в адресе опечатка.</p>
       <Link
-        to={user ? (user.role === "student" ? "/today" : "/staff") : "/login"}
+        to={user ? homePath(user) : "/login"}
         className="mc-grad mx-auto inline-flex min-h-11 items-center rounded-xl px-5 text-sm font-bold no-underline"
       >
         {user ? "На главную" : "Ко входу"}

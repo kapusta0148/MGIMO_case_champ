@@ -6,19 +6,21 @@
 
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 from flask import Blueprint, jsonify, request
+from sqlalchemy import func, select
 
 from .. import clock
-from ..errors import not_found, validation_error
+from ..errors import ApiError, not_found, validation_error
 from ..extensions import db
-from ..models import Announcement
+from ..models import Announcement, Deadline, PersonalTask
 from ..models.user import ROLE_STUDENT
 from ..security.auth import current_user, roles_required
 from ..services import dashboard as dashboard_service
 from ..services import grades as grades_service
 from ..services import notifications as notification_service
+from ..services import planner as planner_service
 from ..services import requests as request_service
 from ..services import schedule as schedule_service
 from .auth import json_body
@@ -208,3 +210,158 @@ def announcement(announcement_id: int):
             }
         }
     )
+
+
+# ── Планировщик и личные задачи ───────────────────────────────────────────────
+
+TASK_LIMIT = 100
+
+
+def _task_payload(task: PersonalTask) -> dict:
+    return {
+        "id": task.id,
+        "title": task.title,
+        "dueAt": clock.iso(task.due_at),
+        "plannedStart": clock.iso(task.planned_start),
+        "plannedEnd": clock.iso(task.planned_end),
+        "estimatedMinutes": task.estimated_minutes,
+        "deadlineId": task.deadline_id,
+        "fromPlanner": task.source_key is not None,
+        "completed": task.completed_at is not None,
+        "completedAt": clock.iso(task.completed_at),
+        "createdAt": clock.iso(task.created_at),
+    }
+
+
+def _own_task(user_id: int, task_id: int) -> PersonalTask:
+    task = db.session.execute(
+        select(PersonalTask).where(PersonalTask.id == task_id, PersonalTask.owner_user_id == user_id)
+    ).scalar_one_or_none()
+    if task is None:
+        raise not_found("Задача не найдена.")
+    return task
+
+
+def _parse_moment(raw: object, field: str, errors: dict) -> datetime | None:
+    if raw in (None, ""):
+        return None
+    try:
+        value = datetime.fromisoformat(str(raw))
+    except ValueError:
+        errors[field] = "Дата и время в формате ГГГГ-ММ-ДДTЧЧ:ММ."
+        return None
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=clock.MSK)  # время из формы — московское
+    if abs(value - clock.now()) > timedelta(days=366):
+        errors[field] = "Дата слишком далеко от сегодняшней."
+    return value
+
+
+@bp.get("/planner")
+@student_only
+def planner():
+    return jsonify(planner_service.build_plan(current_user()))
+
+
+@bp.get("/tasks")
+@student_only
+def list_tasks():
+    user = current_user()
+    tasks = db.session.execute(
+        select(PersonalTask)
+        .where(PersonalTask.owner_user_id == user.id)
+        .order_by(
+            PersonalTask.completed_at.is_not(None),
+            func.coalesce(PersonalTask.planned_start, PersonalTask.due_at).asc().nulls_last(),
+            PersonalTask.id,
+        )
+    ).scalars()
+    return jsonify({"items": [_task_payload(t) for t in tasks]})
+
+
+@bp.post("/tasks")
+@student_only
+def create_task():
+    """Своя задача или принятый блок планировщика (sourceKey). Повторное добавление блока не создаёт дубль."""
+    user = current_user()
+    data = json_body()
+    errors: dict[str, str] = {}
+    title = request_service.clean_text(data.get("title"), 160)
+    if len(title) < 2:
+        errors["title"] = "Опишите задачу (от 2 символов)."
+    elif len(title) > 160:
+        errors["title"] = "Не длиннее 160 символов."
+    due_at = _parse_moment(data.get("dueAt"), "dueAt", errors)
+    start = _parse_moment(data.get("plannedStart"), "plannedStart", errors)
+    end = _parse_moment(data.get("plannedEnd"), "plannedEnd", errors)
+    if (start is None) != (end is None) or (start and end and end <= start):
+        errors["plannedEnd"] = "Укажите начало и конец, конец позже начала."
+    estimate = data.get("estimatedMinutes")
+    if estimate not in (None, ""):
+        if isinstance(estimate, bool) or not isinstance(estimate, int) or not 5 <= estimate <= 600:
+            errors["estimatedMinutes"] = "Оценка времени — от 5 до 600 минут."
+    else:
+        estimate = None
+    deadline_id = data.get("deadlineId")
+    if deadline_id is not None:
+        deadline = db.session.get(Deadline, deadline_id) if isinstance(deadline_id, int) else None
+        if deadline is None or deadline.group_id != user.student.group_id:
+            errors["deadlineId"] = "Дедлайн не найден."
+    source_key = data.get("sourceKey")
+    if source_key is not None and (not isinstance(source_key, str) or not 3 <= len(source_key) <= 80):
+        errors["sourceKey"] = "Некорректный ключ предложения."
+    if errors:
+        raise validation_error(errors)
+
+    if source_key:
+        existing = db.session.execute(
+            select(PersonalTask).where(
+                PersonalTask.owner_user_id == user.id, PersonalTask.source_key == source_key
+            )
+        ).scalar_one_or_none()
+        if existing is not None:
+            return jsonify({"task": _task_payload(existing), "created": False})
+    count = db.session.execute(
+        select(func.count()).select_from(PersonalTask).where(PersonalTask.owner_user_id == user.id)
+    ).scalar_one()
+    if count >= TASK_LIMIT:
+        raise ApiError(409, "too_many_tasks", f"Не больше {TASK_LIMIT} задач. Удалите выполненные.")
+
+    if start and end and estimate is None:
+        estimate = int((end - start).total_seconds() // 60)
+    task = PersonalTask(
+        owner_user_id=user.id,
+        title=title,
+        due_at=due_at,
+        planned_start=start,
+        planned_end=end,
+        estimated_minutes=estimate,
+        deadline_id=deadline_id,
+        source_key=source_key,
+        created_at=clock.now(),
+    )
+    db.session.add(task)
+    db.session.commit()
+    return jsonify({"task": _task_payload(task), "created": True}), 201
+
+
+@bp.patch("/tasks/<int:task_id>")
+@student_only
+def update_task(task_id: int):
+    user = current_user()
+    task = _own_task(user.id, task_id)
+    completed = json_body().get("completed")
+    if not isinstance(completed, bool):
+        raise validation_error({"completed": "Ожидается true или false."})
+    task.completed_at = clock.now() if completed else None
+    db.session.commit()
+    return jsonify({"task": _task_payload(task)})
+
+
+@bp.delete("/tasks/<int:task_id>")
+@student_only
+def delete_task(task_id: int):
+    user = current_user()
+    db.session.delete(_own_task(user.id, task_id))
+    db.session.commit()
+    return jsonify({"ok": True})

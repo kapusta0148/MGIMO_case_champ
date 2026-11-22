@@ -1,4 +1,4 @@
-import { Bell, CalendarDays, FileText, GraduationCap, Sun, User as UserIcon, WifiOff } from "lucide-react";
+import { Bell, CalendarDays, FileText, GraduationCap, ListChecks, Sun, User as UserIcon, WifiOff } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useNotifications } from "../api/hooks";
@@ -8,10 +8,12 @@ import { cx } from "./ui";
 const NAV = [
   { to: "/today", label: "Сегодня", icon: Sun },
   { to: "/schedule", label: "Пары", icon: CalendarDays },
+  { to: "/planner", label: "План", icon: ListChecks },
   { to: "/grades", label: "Оценки", icon: GraduationCap },
   { to: "/requests", label: "Заявки", icon: FileText },
-  { to: "/profile", label: "Профиль", icon: UserIcon },
 ];
+// На компьютере в боковой колонке есть место и для профиля; на телефоне он открывается по аватару.
+const SIDEBAR = [...NAV, { to: "/profile", label: "Профиль", icon: UserIcon }];
 
 export function PrototypeNote({ className }: { className?: string }) {
   return (
@@ -74,7 +76,7 @@ export function StudentLayout() {
           <Brand />
         </Link>
         <nav className="mt-8 grid gap-1" aria-label="Разделы">
-          {NAV.map(({ to, label, icon: Icon }) => (
+          {SIDEBAR.map(({ to, label, icon: Icon }) => (
             <NavLink
               key={to}
               to={to}

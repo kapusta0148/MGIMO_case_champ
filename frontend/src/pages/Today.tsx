@@ -203,20 +203,30 @@ export function TodayPage() {
             )}
           </div>
 
-          {window && (
-            <div className="mc-rise mc-rise-4 flex items-center gap-3 rounded-[18px] border border-line bg-surface-2 p-3.5 text-[13px]">
-              <Hourglass size={18} className="shrink-0 text-accent-2" aria-hidden />
-              <p className="m-0 flex-1 text-muted">
-                <b className="text-text">
-                  Окно {time(window.from)}–{time(window.to)}.
-                </b>{" "}
-                {Math.floor(window.minutes / 60) > 0 && `${Math.floor(window.minutes / 60)} ч `}
-                {window.minutes % 60 > 0 && `${window.minutes % 60} мин `}
-                между парами
-                {nearest?.isSoon ? ` — можно заняться «${nearest.title.replace(/[«»]/g, "")}».` : "."}
-              </p>
-            </div>
-          )}
+          <Link
+            to="/planner"
+            className="mc-rise mc-rise-4 flex items-center gap-3 rounded-[18px] border border-line bg-surface-2 p-3.5 text-[13px] text-text no-underline hover:border-accent-2/50"
+          >
+            <Hourglass size={18} className="shrink-0 text-accent-2" aria-hidden />
+            <p className="m-0 flex-1 text-muted">
+              {window ? (
+                <>
+                  <b className="text-text">
+                    Окно {time(window.from)}–{time(window.to)}.
+                  </b>{" "}
+                  {Math.floor(window.minutes / 60) > 0 && `${Math.floor(window.minutes / 60)} ч `}
+                  {window.minutes % 60 > 0 && `${window.minutes % 60} мин `}
+                  между парами
+                  {nearest?.isSoon ? ` — можно заняться «${nearest.title.replace(/[«»]/g, "")}».` : "."}
+                </>
+              ) : (
+                <>
+                  <b className="text-text">План на неделю:</b> свободные окна и подготовка к дедлайнам.
+                </>
+              )}
+            </p>
+            <ArrowRight size={16} className="shrink-0 text-muted" aria-hidden />
+          </Link>
 
           {data.notifications.length > 0 && (
             <CardLink to="/notifications" className="mc-rise-4">

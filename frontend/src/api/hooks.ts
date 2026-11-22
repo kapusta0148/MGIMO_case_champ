@@ -6,6 +6,8 @@ import type {
   Grades,
   Lesson,
   Notification,
+  PersonalTask,
+  Planner,
   RequestDetail,
   RequestSummary,
   RequestType,
@@ -115,3 +117,47 @@ export const useAnnouncement = (id: number) =>
     queryKey: ["announcement", id],
     queryFn: () => api<{ announcement: Announcement }>(`/me/announcements/${id}`).then((d) => d.announcement),
   });
+
+// ── Планировщик и личные задачи ───────────────────────────────────────────────
+
+export const usePlanner = () => useQuery({ queryKey: ["planner"], queryFn: () => api<Planner>("/me/planner") });
+
+export const useTasks = () =>
+  useQuery({
+    queryKey: ["tasks"],
+    queryFn: () => api<{ items: PersonalTask[] }>("/me/tasks").then((d) => d.items),
+  });
+
+function useInvalidatePlan() {
+  const queryClient = useQueryClient();
+  return () => {
+    void queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    void queryClient.invalidateQueries({ queryKey: ["planner"] });
+  };
+}
+
+export function useCreateTask() {
+  const invalidate = useInvalidatePlan();
+  return useMutation({
+    mutationFn: (body: Record<string, unknown>) =>
+      api<{ task: PersonalTask; created: boolean }>("/me/tasks", { method: "POST", body }),
+    onSuccess: invalidate,
+  });
+}
+
+export function useToggleTask() {
+  const invalidate = useInvalidatePlan();
+  return useMutation({
+    mutationFn: ({ id, completed }: { id: number; completed: boolean }) =>
+      api<{ task: PersonalTask }>(`/me/tasks/${id}`, { method: "PATCH", body: { completed } }),
+    onSuccess: invalidate,
+  });
+}
+
+export function useDeleteTask() {
+  const invalidate = useInvalidatePlan();
+  return useMutation({
+    mutationFn: (id: number) => api<{ ok: boolean }>(`/me/tasks/${id}`, { method: "DELETE" }),
+    onSuccess: invalidate,
+  });
+}

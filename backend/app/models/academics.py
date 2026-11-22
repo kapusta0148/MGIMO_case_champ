@@ -199,3 +199,38 @@ class Deadline(db.Model):
     course: Mapped[Course | None] = relationship()
 
     __table_args__ = (Index("ix_deadlines_group_due", "group_id", "due_at"),)
+
+
+class PersonalTask(db.Model):
+    """Личная задача студента: своя или принятая из предложения планировщика.
+
+    source_key — ключ предложения планировщика: повторное «Добавить» не создаёт дубль.
+    """
+
+    __tablename__ = "personal_tasks"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    owner_user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
+    title: Mapped[str] = mapped_column(String(160))
+    due_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    planned_start: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    planned_end: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    estimated_minutes: Mapped[int | None] = mapped_column(SmallInteger)
+    deadline_id: Mapped[int | None] = mapped_column(ForeignKey("deadlines.id", ondelete="SET NULL"))
+    source_key: Mapped[str | None] = mapped_column(String(80))
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=clock.now)
+
+    deadline: Mapped[Deadline | None] = relationship()
+
+    __table_args__ = (
+        Index("ix_personal_tasks_owner_completed", "owner_user_id", "completed_at"),
+        UniqueConstraint("owner_user_id", "source_key"),
+        db.CheckConstraint(
+            "planned_start is null or (planned_end is not null and planned_end > planned_start)",
+            name="planned_order",
+        ),
+        db.CheckConstraint(
+            "estimated_minutes is null or (estimated_minutes between 5 and 600)", name="estimate_range"
+        ),
+    )

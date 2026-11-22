@@ -34,11 +34,15 @@ def _generate_password() -> str:
     return "campus-" + "-".join(parts)
 
 
-def resolve_demo_passwords() -> tuple[dict[str, str], list[str]]:
-    """Пароли из окружения; недостающие генерируются. Возвращает (пароли, какие сгенерированы)."""
+def resolve_demo_passwords(previous: dict[str, str] | None = None) -> tuple[dict[str, str], list[str]]:
+    """Пароли из окружения, затем из прежнего файла; недостающие генерируются.
+
+    Возвращает (пароли, какие сгенерированы).
+    """
+    previous = previous or {}
     passwords, generated = {}, []
     for key, env_name in DEMO_KEYS.items():
-        value = os.environ.get(env_name, "").strip()
+        value = os.environ.get(env_name, "").strip() or previous.get(USERNAMES[key], "")
         if not value:
             value = _generate_password()
             generated.append(key)
@@ -54,7 +58,12 @@ def register_cli(app: Flask) -> None:
     @app.cli.command("seed")
     @click.option("--reset", is_flag=True, help="Удалить ВСЕ данные и создать демо-набор заново.")
     @click.option("--yes", is_flag=True, help="Не спрашивать подтверждение при --reset.")
-    def seed(reset: bool, yes: bool) -> None:
+    @click.option(
+        "--keep-passwords",
+        is_flag=True,
+        help="Взять пароли из прежнего instance/demo_credentials.json: выданные жюри логины не сменятся.",
+    )
+    def seed(reset: bool, yes: bool, keep_passwords: bool) -> None:
         """Наполнить пустую базу вымышленными демо-данными."""
         from .seeds.builder import seed_demo
 
@@ -68,7 +77,10 @@ def register_cli(app: Flask) -> None:
             db.session.execute(text(f"TRUNCATE {tables} RESTART IDENTITY CASCADE"))  # noqa: S608
             db.session.commit()
 
-        passwords, generated = resolve_demo_passwords()
+        previous = {}
+        if keep_passwords and _credentials_path().is_file():
+            previous = json.loads(_credentials_path().read_text(encoding="utf-8"))
+        passwords, generated = resolve_demo_passwords(previous)
         summary = seed_demo(passwords)
         db.session.commit()
 

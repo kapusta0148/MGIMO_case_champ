@@ -27,11 +27,14 @@ def request_types():
 
 
 def register_blueprints(app: Flask) -> None:
-    from . import auth, me
+    from . import admin, auth, me, staff, teacher
 
     app.register_blueprint(meta)
     app.register_blueprint(auth.bp)
     app.register_blueprint(me.bp)
+    app.register_blueprint(staff.bp)
+    app.register_blueprint(teacher.bp)
+    app.register_blueprint(admin.bp)
 
     @app.before_request
     def keep_demo_fresh() -> None:

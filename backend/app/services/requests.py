@@ -420,6 +420,35 @@ def add_student_comment(item: ServiceRequest, *, actor: User, comment: object) -
     return item
 
 
+def add_staff_comment(item: ServiceRequest, *, actor: User, comment: object) -> ServiceRequest:
+    """Комментарий сотрудника студенту без смены статуса (например, уточнение срока)."""
+    if item.status in FINAL_STATUSES:
+        raise ApiError(409, "request_closed", "Заявка закрыта, добавить комментарий нельзя.")
+    text = clean_text(comment, COMMENT_MAX)
+    if not text:
+        raise validation_error({"comment": "Напишите комментарий."})
+    if len(text) > COMMENT_MAX:
+        raise validation_error({"comment": f"Комментарий — не длиннее {COMMENT_MAX} символов."})
+    now = clock.now()
+    item.events.append(RequestEvent(actor_user_id=actor.id, kind=EVENT_COMMENT, comment=text, created_at=now))
+    item.updated_at = now
+    if item.assigned_staff_id is None:
+        item.assigned_staff_id = actor.id
+    _notify_owner(item, f"Заявка {item.number}: комментарий деканата", text)
+    return item
+
+
+def allowed_transitions(status: str) -> list[dict]:
+    return [
+        {
+            "status": target,
+            "label": REQUEST_STATUS_LABELS[target],
+            "commentRequired": target in COMMENT_REQUIRED_FOR,
+        }
+        for target in STAFF_TRANSITIONS.get(status, ())
+    ]
+
+
 def _status_payload(status: str) -> dict:
     return {
         "status": status,
