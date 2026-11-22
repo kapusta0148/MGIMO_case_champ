@@ -34,7 +34,7 @@ class User(db.Model):
     password_hash: Mapped[str] = mapped_column(String(255))
     role: Mapped[str] = mapped_column(String(16), index=True)
     is_active: Mapped[bool] = mapped_column(default=True)
-    # True — аккаунт создан открытой демо-регистрацией (данные сгенерированы сервером).
+    # Признак автоматически сгенерированного демо-аккаунта; открытая регистрация пока не реализована.
     is_generated: Mapped[bool] = mapped_column(default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=clock.now)
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

@@ -43,7 +43,7 @@ class StudyGroup(db.Model):
     name: Mapped[str] = mapped_column(String(32), unique=True)
     year: Mapped[int] = mapped_column(SmallInteger)  # курс обучения
     admission_year: Mapped[int] = mapped_column(SmallInteger)
-    # В эту группу можно зачислять автоматически сгенерированных демо-студентов.
+    # Резерв для отбора групп при добавлении демо-регистрации.
     open_for_demo: Mapped[bool] = mapped_column(default=True)
 
     program: Mapped[Program] = relationship(back_populates="groups")

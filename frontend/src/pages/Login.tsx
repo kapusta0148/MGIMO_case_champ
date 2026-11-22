@@ -14,9 +14,9 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [fields, setFields] = useState<Record<string, string>>({});
 
-  // Куда вернуть после входа: студент — на страницу, которую открывал (например, ссылку из уведомления).
+  // После входа студент возвращается на ранее запрошенную страницу, например из уведомления.
   const from = (location.state as { from?: string } | null)?.from;
-  // Переход делает только этот Navigate: он срабатывает и после успешного входа, без гонки с navigate().
+  // Единственный переход после входа исключает гонку между обновлением сессии и навигацией.
   if (user) return <Navigate to={user.role === "student" && from?.startsWith("/") ? from : homePath(user)} replace />;
 
   async function submit(event: FormEvent) {

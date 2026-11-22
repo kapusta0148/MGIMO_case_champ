@@ -29,6 +29,7 @@ backend/uploads/
 *.sql.gz
 
 # IDE / ОС
+.claude/
 .idea/
 .vscode/
 .DS_Store

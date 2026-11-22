@@ -65,7 +65,7 @@ export function StudentLayout() {
   const unread = useNotifications().data?.unreadCount ?? 0;
 
   useEffect(() => {
-    // Блок, а не выражение: scrollTo() в новых браузерах возвращает Promise, а эффект не должен ничего возвращать.
+    // Эффект не возвращает результат scrollTo: React ожидает функцию очистки или отсутствие значения.
     window.scrollTo(0, 0);
   }, [pathname]);
 

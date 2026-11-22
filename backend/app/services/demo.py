@@ -28,7 +28,7 @@ from . import notifications, schedule
 log = logging.getLogger("campus.demo")
 
 STATE_KEY = "demo_refresh_date"
-# Три дня, а не два: в субботу вечером ближайшие пары — в понедельник, и перенос всё равно найдётся.
+# Окно в три дня позволяет находить занятия в понедельник при открытии приложения в субботу.
 FRESH_WINDOW = timedelta(days=3)
 REMINDER_WINDOW = timedelta(hours=48)
 

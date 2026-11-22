@@ -104,7 +104,7 @@ function ChangeRow({ lesson, today }: { lesson: Lesson; today: string }) {
   );
 }
 
-/** Объяснимая подсказка: ближайшее свободное окно между оставшимися сегодня парами (правило, не ИИ). */
+/** Подсказка о ближайшем свободном окне между оставшимися занятиями на основе расписания. */
 function freeWindow(d: Dashboard): { from: string; to: string; minutes: number } | null {
   const now = d.now;
   const lessons = d.todayLessons.filter((l) => l.status !== "cancelled").sort((a, b) => a.startsAt.localeCompare(b.startsAt));

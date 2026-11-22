@@ -54,7 +54,7 @@ function ScoreCell({ item, courseId, editable }: { item: TeacherAssessment; cour
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    // Новые данные с сервера не перетирают то, что преподаватель сейчас вводит.
+    // Обновление ведомости не перезаписывает значение в активном поле ввода.
     if (document.activeElement !== inputRef.current) setValue(item.score === null ? "" : String(item.score));
   }, [item.score]);
   const [error, setError] = useState<string | null>(null);

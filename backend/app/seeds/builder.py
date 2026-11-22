@@ -148,13 +148,13 @@ def enroll_student(
     return user
 
 
-# Заполняются при создании курсов: план контроля и даты итогов (нужны при зачислении студентов).
+# Планы контроля и даты итогов; подготовлены для будущего создания демо-профилей.
 COURSE_PLANS: dict[int, dict] = {}
 PAST_FINAL_DAYS: dict[int, date] = {}
 
 
 def load_course_plans() -> None:
-    """Восстановить планы курсов из данных (для регистрации студентов после перезапуска приложения)."""
+    """Восстановить планы курсов из демонстрационных данных после перезапуска приложения."""
     COURSE_PLANS.clear()
     PAST_FINAL_DAYS.clear()
     groups = {g.name: g for g in db.session.execute(select(StudyGroup)).scalars()}
@@ -468,7 +468,7 @@ def seed_demo(
     _build_requests(now, students, staff["dean"])
     _build_grade_notifications(now, students)
 
-    # Всё, что старше двух суток, считаем уже прочитанным — как в живом кабинете.
+    # Демо-уведомления старше двух суток отмечаются прочитанными.
     for item in db.session.execute(select(Notification)).scalars():
         if item.created_at < now - timedelta(days=2):
             item.read_at = item.created_at + timedelta(hours=3)
