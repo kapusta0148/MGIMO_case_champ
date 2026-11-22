@@ -1,0 +1,18 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers"
+filterwarnings = ["error::sqlalchemy.exc.SAWarning"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+extend-exclude = ["migrations"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S", "SIM"]
+ignore = ["S101"]  # assert допустим в тестах и инвариантах
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S105", "S106", "E501"]
+"app/seeds/*" = ["S311"]
+"app/seeds/data.py" = ["E501"]  # таблицы вымышленных данных читаются лучше в одну строку  # детерминированный random для вымышленных данных

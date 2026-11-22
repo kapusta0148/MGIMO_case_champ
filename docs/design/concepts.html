@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MGIMO Campus — три дизайн-концепции</title>
+<!-- Шрифты подключены с Google Fonts только для этого предпросмотра.
+     В самом прототипе шрифты будут лежать на нашем сервере (пакеты Fontsource, лицензия SIL OFL 1.1). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;800;900&family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@500;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500;1,700&family=Unbounded:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:#101114;color:#e9eaee;font:15px/1.5 "Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif}
+  .page{max-width:1320px;margin:0 auto;padding:28px 16px 64px}
+  .intro h1{font:700 26px/1.2 "Golos Text",system-ui,sans-serif;margin:0 0 8px}
+  .intro p{margin:0 0 6px;color:#a9adb8;max-width:860px}
+  .intro .note{display:inline-block;margin-top:10px;padding:6px 10px;border:1px solid #33363f;border-radius:8px;color:#c9ccd6;font-size:13px}
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:28px;margin-top:28px;align-items:start}
+  .col>header{margin-bottom:14px}
+  .col .tag{font:600 12px/1 "IBM Plex Mono",monospace;letter-spacing:.08em;color:#8b90a0;text-transform:uppercase}
+  .col h2{font:700 22px/1.2 "Golos Text",sans-serif;margin:6px 0 4px}
+  .col .lead{color:#a9adb8;margin:0;font-size:14px}
+  .phone{width:min(360px,100%);margin:0 auto;border-radius:34px;padding:0;position:relative;overflow:hidden;box-shadow:0 0 0 8px #1c1e24,0 0 0 9px #33363f,0 24px 60px rgba(0,0,0,.5)}
+  .phone-wrap{padding:12px 9px 24px}
+  .cap{font-size:12px;color:#8b90a0;text-align:center;margin:-8px 0 16px}
+  .specs{background:#17181d;border:1px solid #282a32;border-radius:14px;padding:16px;margin-top:6px}
+  .specs h3{font:600 12px/1 "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:#8b90a0;margin:18px 0 8px}
+  .specs h3:first-child{margin-top:0}
+  .specs p,.specs li{font-size:13.5px;color:#c9ccd6;margin:0}
+  .specs ul{margin:0;padding-left:18px}
+  .specs li{margin:3px 0}
+  .sw{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .sw div{border-radius:8px;height:54px;padding:6px;display:flex;flex-direction:column;justify-content:flex-end;font:500 10px/1.2 "IBM Plex Mono",monospace;border:1px solid rgba(255,255,255,.08)}
+  .sw b{font-weight:500;opacity:.8}
+  .desk{aspect-ratio:16/9;border-radius:10px;padding:8px;display:grid;gap:6px;overflow:hidden;border:1px solid rgba(255,255,255,.1)}
+  .desk i{display:block;border-radius:5px}
+  .cmp{margin-top:36px;overflow-x:auto}
+  .cmp h2{font:700 20px/1.2 "Golos Text",sans-serif;margin:0 0 12px}
+  table{border-collapse:collapse;width:100%;min-width:720px;font-size:13.5px}
+  th,td{border:1px solid #282a32;padding:9px 10px;text-align:left;vertical-align:top}
+  th{background:#17181d;color:#c9ccd6;font-weight:600}
+  td{color:#c9ccd6}
+  .ask{margin-top:28px;padding:16px;border-radius:14px;background:#17181d;border:1px solid #3b3f4c}
+  .ask b{color:#fff}
+  svg{display:block}
+
+  /* ───────────── A · «Ночной рейс» ───────────── */
+  .a{--bg:#0A0C14;--s1:#121624;--s2:#1A2033;--line:#262D45;--tx:#EEF1FA;--mu:#8D96B2;--v:#7C5CFF;--c:#22D3EE;--warn:#FFB020;--ok:#2EE6A6;
+     background:radial-gradient(120% 60% at 100% 0%,rgba(124,92,255,.28),transparent 60%),radial-gradient(90% 50% at 0% 12%,rgba(34,211,238,.14),transparent 60%),var(--bg);
+     color:var(--tx);font:14px/1.45 "Onest",system-ui,sans-serif;padding:16px 16px 0}
+  .a .top{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;color:var(--mu)}
+  .a .top .r{display:flex;gap:10px;align-items:center}
+  .a .ic{width:36px;height:36px;border-radius:12px;background:var(--s1);border:1px solid var(--line);display:grid;place-items:center;position:relative}
+  .a .ic .dot{position:absolute;top:7px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 2px var(--s1)}
+  .a .av{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font:700 11px "Unbounded",sans-serif;color:#0A0C14}
+  .a h4{font:700 23px/1.15 "Unbounded",sans-serif;margin:16px 0 4px;letter-spacing:-.01em}
+  .a .sub{color:var(--mu);font-size:13px;margin:0 0 14px}
+  .a .pass{border-radius:22px;background:linear-gradient(160deg,rgba(124,92,255,.22),rgba(34,211,238,.08) 60%),var(--s1);border:1px solid rgba(124,92,255,.45);box-shadow:0 12px 40px rgba(124,92,255,.22);position:relative}
+  .a .pass .up{padding:14px 16px 14px}
+  .a .kick{display:flex;justify-content:space-between;align-items:center;font:600 10.5px/1 "Onest",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}
+  .a .pill{padding:5px 9px;border-radius:99px;background:rgba(34,211,238,.14);color:var(--c);letter-spacing:.02em;text-transform:none;font-size:12px;font-weight:600}
+  .a .route{display:flex;align-items:center;gap:10px;margin:12px 0 8px}
+  .a .route b{font:700 26px/1 "Unbounded",sans-serif;letter-spacing:-.02em}
+  .a .route span{flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--mu) 0 4px,transparent 4px 9px);position:relative;opacity:.7}
+  .a .route span::after{content:"";position:absolute;left:38%;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c)}
+  .a .ttl{font:600 16px/1.25 "Onest",sans-serif;margin:0}
+  .a .who{color:var(--mu);font-size:13px;margin:3px 0 0}
+  .a .perf{height:0;border-top:2px dashed var(--line);margin:0 14px;position:relative}
+  .a .perf::before,.a .perf::after{content:"";position:absolute;top:-10px;width:18px;height:18px;border-radius:50%;background:var(--bg);border:1px solid rgba(124,92,255,.45)}
+  .a .perf::before{left:-24px}.a .perf::after{right:-24px}
+  .a .gate{display:grid;grid-template-columns:1fr 1fr 1fr;padding:12px 16px 14px;gap:8px}
+  .a .gate small{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}
+  .a .gate b{font:600 15px/1.3 "Unbounded",sans-serif}
+  .a .chg{margin-top:10px;border-radius:18px;background:var(--s1);border:1px solid rgba(255,176,32,.45);padding:12px 14px;display:flex;gap:12px;align-items:center}
+  .a .chg .w{flex:none;width:34px;height:34px;border-radius:11px;background:rgba(255,176,32,.14);display:grid;place-items:center}
+  .a .chg p{margin:0;font-size:13px;color:var(--mu)}
+  .a .chg p b{color:var(--tx);font-weight:600;font-size:14px}
+  .a .chg s{opacity:.7}
+  .a .chg em{font-style:normal;color:var(--warn);font-weight:600}
+  .a .two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .a .t{border-radius:18px;background:var(--s1);border:1px solid var(--line);padding:12px 12px 13px}
+  .a .t small{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}
+  .a .t b{display:block;font-weight:600;font-size:13.5px;line-height:1.25;margin:6px 0 6px}
+  .a .t span{font-size:12px;color:var(--warn);font-weight:600}
+  .a .t span.ok{color:var(--ok)}
+  .a .plan{margin-top:10px;border-radius:18px;padding:12px 14px;background:var(--s2);border:1px solid var(--line);display:flex;align-items:center;gap:10px;font-size:13px}
+  .a .plan p{margin:0;flex:1;color:var(--mu)}.a .plan p b{color:var(--tx);font-weight:600}
+  .a .btn{flex:none;border-radius:12px;padding:9px 12px;font-weight:700;font-size:12.5px;color:#0A0C14;background:linear-gradient(135deg,var(--v),var(--c))}
+  .a .nav{margin:14px -4px 0;padding:8px;border-radius:22px;background:rgba(18,22,36,.86);border:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);backdrop-filter:blur(12px)}
+  .a .nav div{display:grid;justify-items:center;gap:4px;font-size:10px;color:var(--mu);padding:7px 0;border-radius:14px}
+  .a .nav .on{color:var(--tx);background:linear-gradient(160deg,rgba(124,92,255,.35),rgba(34,211,238,.14))}
+  .a .disc{text-align:center;font-size:10.5px;color:var(--mu);padding:9px 0 12px}
+
+  /* ───────────── B · «Депеша» ───────────── */
+  .b{--paper:#F4EFE6;--card:#FBF8F2;--ink:#17140F;--mu:#6E675C;--line:#D9D1C3;--red:#C8371F;--green:#1F5A46;--hl:#F2D95C;
+     background:var(--paper);color:var(--ink);font:14px/1.5 "Golos Text",system-ui,sans-serif;padding:16px 18px 0}
+  .b .mast{display:flex;justify-content:space-between;align-items:baseline}
+  .b .logo{font:italic 700 24px/1 "Playfair Display",serif;letter-spacing:-.01em}
+  .b .logo i{font-style:normal;color:var(--red)}
+  .b .meta{font:500 10.5px/1 "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mu)}
+  .b hr{border:0;border-top:1px solid var(--ink);margin:10px 0}
+  .b hr.d{border-top:3px double var(--ink)}
+  .b hr.s{border-top:1px solid var(--line)}
+  .b h4{font:700 27px/1.1 "Playfair Display",serif;margin:14px 0 6px;letter-spacing:-.01em}
+  .b .sub{margin:0 0 4px;color:var(--mu);font-size:13.5px}
+  .b .sec{display:flex;justify-content:space-between;align-items:baseline;font:500 10.5px/1 "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);margin-bottom:8px}
+  .b .sec b{color:var(--red);font-weight:500}
+  .b .next{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+  .b .time{font:900 34px/.95 "Playfair Display",serif;letter-spacing:-.02em}
+  .b .time small{display:block;font:500 12px/1.6 "IBM Plex Mono",monospace;color:var(--mu);letter-spacing:0}
+  .b .next p{margin:0}
+  .b .next .ttl{font:700 17px/1.2 "Playfair Display",serif}
+  .b .next .who{font-size:13px;color:var(--mu);margin-top:4px}
+  .b .room{display:inline-block;margin-top:7px;padding:2px 8px;border:1px solid var(--ink);font:500 12px/1.5 "IBM Plex Mono",monospace}
+  .b .chgb{position:relative}
+  .b .stamp{position:absolute;right:0;top:-6px;transform:rotate(-7deg);border:2px solid var(--red);color:var(--red);padding:3px 8px;font:500 11px/1.2 "IBM Plex Mono",monospace;letter-spacing:.14em;border-radius:3px}
+  .b .chgb .ttl{font:700 17px/1.2 "Playfair Display",serif;margin:0 0 4px}
+  .b .chgb p{margin:0;font-size:14px}
+  .b .chgb s{color:var(--mu)}
+  .b mark{background:linear-gradient(transparent 55%,var(--hl) 55%);color:inherit;font-weight:600}
+  .b .lnk{display:inline-block;margin-top:6px;color:var(--red);font-weight:600;font-size:13px;border-bottom:1px solid currentColor}
+  .b .two{display:grid;grid-template-columns:1fr 1fr}
+  .b .two>div{padding-right:12px}
+  .b .two>div+div{padding:0 0 0 12px;border-left:1px solid var(--line)}
+  .b .two b{display:block;font:700 15px/1.2 "Playfair Display",serif;margin-bottom:4px}
+  .b .two span{font-size:12.5px;color:var(--mu)}
+  .b .two em{font-style:normal;color:var(--red);font-weight:600}
+  .b .two em.g{color:var(--green)}
+  .b .steps{display:flex;gap:4px;margin-top:7px}
+  .b .steps i{flex:1;height:3px;background:var(--line)}
+  .b .steps i.f{background:var(--green)}
+  .b blockquote{margin:0;font:italic 500 16px/1.35 "Playfair Display",serif}
+  .b blockquote+span{font-size:13px;color:var(--red);font-weight:600;border-bottom:1px solid currentColor;display:inline-block;margin-top:6px}
+  .b .nav{margin:14px -18px 0;padding:8px 8px 4px;border-top:1px solid var(--ink);display:grid;grid-template-columns:repeat(5,1fr);background:var(--card)}
+  .b .nav div{text-align:center;font-size:11px;color:var(--mu);padding:8px 0 6px;position:relative}
+  .b .nav .on{color:var(--ink);font-weight:700}
+  .b .nav .on::after{content:"";position:absolute;left:50%;bottom:0;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--red)}
+  .b .disc{margin:0 -18px;background:var(--card);text-align:center;font:500 9.5px/1 "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);padding:6px 0 12px}
+
+  /* ───────────── C · «Сигнал» ───────────── */
+  .c{--bg:#ECEAF5;--ink:#14121F;--w:#FFFFFF;--v:#5B3DF5;--lime:#C6F432;--coral:#FF6A4D;--mu:#5E5A70;
+     background:var(--bg);color:var(--ink);font:14px/1.4 "Manrope",system-ui,sans-serif;padding:14px 14px 0}
+  .c .top{display:flex;justify-content:space-between;align-items:center}
+  .c .lg{display:flex;align-items:center;gap:8px;font:800 14px "Geologica",sans-serif}
+  .c .lg i{font-style:normal;width:34px;height:34px;border-radius:10px;background:var(--lime);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--ink);display:grid;place-items:center;font:900 13px "Geologica",sans-serif;transform:rotate(-4deg)}
+  .c .top .r{display:flex;gap:8px}
+  .c .sq{width:36px;height:36px;border-radius:11px;background:var(--w);border:2px solid var(--ink);display:grid;place-items:center;position:relative;font:800 11px "Geologica",sans-serif}
+  .c .sq u{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:9px;background:var(--coral);border:2px solid var(--ink);font:700 10px/14px "JetBrains Mono",monospace;text-align:center;text-decoration:none}
+  .c h4{font:900 29px/1.02 "Geologica",sans-serif;margin:14px 0 20px;letter-spacing:-.02em}
+  .c h4 span{background:var(--lime);padding:0 6px;border-radius:8px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  .c .tile{border:2px solid var(--ink);border-radius:20px;box-shadow:4px 4px 0 var(--ink);padding:13px 14px;position:relative}
+  .c .k{font:700 10.5px/1 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase}
+  .c .big{background:var(--v);color:#fff}
+  .c .big .stk{position:absolute;right:12px;top:-12px;transform:rotate(5deg);background:var(--lime);color:var(--ink);border:2px solid var(--ink);border-radius:10px;padding:5px 9px;font:800 12px "Geologica",sans-serif;box-shadow:2px 2px 0 var(--ink)}
+  .c .big .tm{font:700 25px/1 "JetBrains Mono",monospace;margin:10px 0 8px;letter-spacing:-.03em}
+  .c .big .ttl{font:800 17px/1.2 "Geologica",sans-serif;margin:0}
+  .c .row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .c .chip{background:#fff;color:var(--ink);border:2px solid var(--ink);border-radius:9px;padding:3px 8px;font-weight:700;font-size:12px}
+  .c .chip.g{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}
+  .c .mv{background:var(--coral);margin-top:12px;display:flex;align-items:center;gap:10px}
+  .c .mv p{margin:5px 0 0;font:800 15px/1.2 "Geologica",sans-serif}
+  .c .mv .tt{font:700 13px/1.3 "JetBrains Mono",monospace;margin-top:4px}
+  .c .mv s{opacity:.65}
+  .c .go{flex:none;margin-left:auto;width:38px;height:38px;border-radius:12px;background:var(--ink);display:grid;place-items:center}
+  .c .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  .c .dl{background:var(--lime)}
+  .c .rq{background:var(--w)}
+  .c .two b{display:block;font:800 14px/1.2 "Geologica",sans-serif;margin:7px 0 6px}
+  .c .two span{font:700 12px "JetBrains Mono",monospace}
+  .c .dots{display:flex;gap:4px;margin-bottom:5px}
+  .c .dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink)}
+  .c .dots i.f{background:var(--v)}
+  .c .pl{background:var(--ink);color:#fff;margin-top:12px;display:flex;align-items:center;gap:10px;box-shadow:4px 4px 0 var(--v)}
+  .c .pl p{margin:0;flex:1;font-size:13px;font-weight:600}
+  .c .pl p b{color:var(--lime)}
+  .c .pl .bt{flex:none;background:var(--lime);color:var(--ink);border-radius:11px;padding:8px 11px;font:800 12.5px "Geologica",sans-serif}
+  .c .nav{margin:16px -2px 0;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;background:var(--w);border:2px solid var(--ink);border-radius:20px;padding:6px;box-shadow:4px 4px 0 var(--ink)}
+  .c .nav div{display:grid;justify-items:center;gap:3px;font-size:10px;font-weight:700;padding:7px 0 6px;border-radius:13px;border:2px solid transparent;color:var(--mu)}
+  .c .nav .on{background:var(--lime);border-color:var(--ink);color:var(--ink)}
+  .c .disc{text-align:center;font:700 10px "JetBrains Mono",monospace;color:var(--mu);padding:12px 0 12px}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <section class="intro">
+    <h1>MGIMO Campus — три дизайн-концепции на выбор</h1>
+    <p>Один и тот же экран «Сегодня» с одинаковыми вымышленными данными в трёх непохожих визуальных системах. Экран каждого телефона — ровно 360&nbsp;px в ширину, как минимальный экран из требований конкурса.</p>
+    <p>Во всех вариантах порядок блоков одинаковый: следующая пара → перенос → дедлайн → активная заявка → совет планировщика. Отличаются характер, цвет, шрифты, навигация и движение.</p>
+    <span class="note">Конкурсный прототип · неофициальный сервис · официальная символика вуза не используется · все имена и данные вымышлены</span>
+  </section>
+
+  <div class="cols">
+
+    <!-- ═════════ A ═════════ -->
+    <article class="col">
+      <header>
+        <div class="tag">Концепция A</div>
+        <h2>«Ночной рейс»</h2>
+        <p class="lead">Тёмный интерфейс с сиянием. Следующая пара оформлена как посадочный талон: время, «гейт»-аудитория, номер пары.</p>
+      </header>
+      <div class="phone-wrap"><div class="phone"><div class="a">
+        <div class="top"><span>Пн, 16 ноября</span>
+          <span class="r">
+            <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EEF1FA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7 2.5 7h-17S6 15 6 9Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><i class="dot"></i></span>
+            <span class="av">МС</span>
+          </span>
+        </div>
+        <h4>Привет, Мира</h4>
+        <p class="sub">Сегодня 3 пары · 1 перенос · 1 дедлайн</p>
+
+        <div class="pass">
+          <div class="up">
+            <div class="kick"><span>Следующая пара</span><span class="pill">через 42 мин</span></div>
+            <div class="route"><b>10:40</b><span></span><b>12:10</b></div>
+            <p class="ttl">Теория международных отношений</p>
+            <p class="who">Семинар · доц. Е. А. Корнилова</p>
+          </div>
+          <div class="perf"></div>
+          <div class="gate">
+            <div><small>Аудитория</small><b>3041</b></div>
+            <div><small>Корпус</small><b>Новый</b></div>
+            <div><small>Пара</small><b>№ 2</b></div>
+          </div>
+        </div>
+
+        <div class="chg">
+          <span class="w"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFB020" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg></span>
+          <p><b>Английский язык перенесён</b><br><s>12:30 · ауд. 2112</s> → <em>14:20 · ауд. 4017</em></p>
+        </div>
+
+        <div class="two">
+          <div class="t"><small>Дедлайн</small><b>Эссе по политологии</b><span>завтра, 23:59</span></div>
+          <div class="t"><small>Заявка</small><b>Справка об обучении</b><span class="ok">на рассмотрении</span></div>
+        </div>
+
+        <div class="plan"><p><b>Окно 12:30–14:20.</b> 90 минут на эссе до переноса.</p><span class="btn">В план</span></div>
+
+        <div class="nav">
+          <div class="on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></svg>Сегодня</div>
+          <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Пары</div>
+          <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 20V11M12 20V5M19 20v-6"/></svg>Оценки</div>
+          <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h8l4 4v14H7z"/><path d="M10 12h6M10 16h6"/></svg>Заявки</div>
+          <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="18" cy="12" r="1.3"/></svg>Ещё</div>
+        </div>
+        <div class="disc">Конкурсный прототип · неофициальный сервис</div>
+      </div></div></div>
+      <p class="cap">360 px · тёмная тема по умолчанию</p>
+
+      <div class="specs">
+        <h3>Палитра</h3>
+        <div class="sw">
+          <div style="background:#0A0C14;color:#EEF1FA"><b>фон</b>#0A0C14</div>
+          <div style="background:#121624;color:#EEF1FA"><b>карта</b>#121624</div>
+          <div style="background:#1A2033;color:#EEF1FA"><b>карта 2</b>#1A2033</div>
+          <div style="background:#EEF1FA;color:#0A0C14"><b>текст</b>#EEF1FA</div>
+          <div style="background:#7C5CFF;color:#0A0C14"><b>акцент</b>#7C5CFF</div>
+          <div style="background:#22D3EE;color:#0A0C14"><b>акцент 2</b>#22D3EE</div>
+          <div style="background:#FFB020;color:#0A0C14"><b>перенос</b>#FFB020</div>
+          <div style="background:#2EE6A6;color:#0A0C14"><b>успех</b>#2EE6A6</div>
+        </div>
+        <h3>Шрифты (SIL OFL 1.1, с кириллицей)</h3>
+        <p><span style="font:700 17px Unbounded,sans-serif;color:#fff">Unbounded</span> — заголовки и цифры времени.<br><span style="font:500 15px Onest,sans-serif;color:#fff">Onest</span> — основной текст и подписи.</p>
+        <h3>Навигация</h3>
+        <p>Плавающая «таблетка» из пяти вкладок внизу; активная подсвечена градиентом. Колокольчик уведомлений всегда в шапке.</p>
+        <h3>Движение</h3>
+        <p>Карточки мягко «всплывают» при загрузке, точка на маршруте талона движется по мере приближения пары, счётчик времени обновляется. При <code>prefers-reduced-motion</code> остаются только плавные смены прозрачности.</p>
+        <h3>Компьютер</h3>
+        <div class="desk" style="background:#0A0C14;grid-template-columns:44px 1.5fr 1fr;grid-template-rows:1.25fr 1fr">
+          <i style="background:#121624;grid-row:1/3"></i>
+          <i style="background:linear-gradient(135deg,#3a2c86,#145a6b)"></i>
+          <i style="background:#121624;grid-row:1/3"></i>
+          <i style="background:#1A2033"></i>
+        </div>
+        <p style="margin-top:6px">Узкая панель значков слева, в центре талон и лента дня, справа колонка уведомлений и заявок.</p>
+        <h3>Почему это наше</h3>
+        <p>Метафора посадочного талона отсылает к международной теме вуза без его символики: пара — это «рейс», аудитория — «гейт». Светлая тема «День» — те же токены на светлых поверхностях.</p>
+      </div>
+    </article>
+
+    <!-- ═════════ B ═════════ -->
+    <article class="col">
+      <header>
+        <div class="tag">Концепция B</div>
+        <h2>«Депеша»</h2>
+        <p class="lead">Светлая «газетная» вёрстка: бумага, тушь, сургучно-красный акцент. Перенос показан как корректорская правка, статус — как штамп.</p>
+      </header>
+      <div class="phone-wrap"><div class="phone"><div class="b">
+        <div class="mast"><span class="logo">Campus<i>.</i></span><span class="meta">Пн · 16.11.2026</span></div>
+        <hr class="d">
+        <h4>Доброе утро, Мира</h4>
+        <p class="sub">Сегодня три пары, один перенос и один дедлайн.</p>
+        <hr>
+        <div class="sec"><span>§1 · Следующая пара</span><b>через 42 мин</b></div>
+        <div class="next">
+          <div class="time">10:40<small>до 12:10</small></div>
+          <div>
+            <p class="ttl">Теория международных отношений</p>
+            <p class="who">Семинар · доц. Е. А. Корнилова</p>
+            <span class="room">ауд. 3041 · Новый корпус</span>
+          </div>
+        </div>
+        <hr class="s">
+        <div class="chgb">
+          <div class="sec"><span>§2 · Изменение</span></div>
+          <span class="stamp">ПЕРЕНОС</span>
+          <p class="ttl">Английский язык</p>
+          <p><s>12:30, ауд. 2112</s> → <mark>14:20, ауд. 4017</mark></p>
+          <span class="lnk">Открыть в расписании →</span>
+        </div>
+        <hr class="s">
+        <div class="two">
+          <div><div class="sec"><span>§3 · Дедлайн</span></div><b>Эссе по политологии</b><span><em>завтра, 23:59</em></span></div>
+          <div><div class="sec"><span>§4 · Заявка</span></div><b>Справка об обучении</b><span><em class="g">на рассмотрении</em></span><div class="steps"><i class="f"></i><i class="f"></i><i></i></div></div>
+        </div>
+        <hr class="s">
+        <div class="sec"><span>§5 · Планировщик</span></div>
+        <blockquote>«Окно с 12:30 до 14:20 — девяносто минут на эссе.»</blockquote>
+        <span>Добавить в план →</span>
+        <div class="nav"><div class="on">Сегодня</div><div>Пары</div><div>Оценки</div><div>Заявки</div><div>Ещё</div></div>
+        <div class="disc">Конкурсный прототип · неофициальный сервис</div>
+      </div></div></div>
+      <p class="cap">360 px · светлая тема по умолчанию</p>
+
+      <div class="specs">
+        <h3>Палитра</h3>
+        <div class="sw">
+          <div style="background:#F4EFE6;color:#17140F"><b>бумага</b>#F4EFE6</div>
+          <div style="background:#FBF8F2;color:#17140F"><b>карта</b>#FBF8F2</div>
+          <div style="background:#D9D1C3;color:#17140F"><b>линии</b>#D9D1C3</div>
+          <div style="background:#17140F;color:#F4EFE6"><b>тушь</b>#17140F</div>
+          <div style="background:#C8371F;color:#fff"><b>акцент</b>#C8371F</div>
+          <div style="background:#1F5A46;color:#fff"><b>успех</b>#1F5A46</div>
+          <div style="background:#F2D95C;color:#17140F"><b>маркер</b>#F2D95C</div>
+          <div style="background:#6E675C;color:#fff"><b>подписи</b>#6E675C</div>
+        </div>
+        <h3>Шрифты (SIL OFL 1.1, с кириллицей)</h3>
+        <p><span style="font:700 19px 'Playfair Display',serif;color:#fff">Playfair Display</span> — заголовки и крупное время.<br><span style="font:500 15px 'Golos Text',sans-serif;color:#fff">Golos Text</span> — основной текст.<br><span style="font:500 13px 'IBM Plex Mono',monospace;color:#fff">IBM Plex Mono</span> — рубрики, даты, аудитории.</p>
+        <h3>Навигация</h3>
+        <p>Нижняя строка из пяти текстовых вкладок без значков, активная отмечена красной точкой. Разделы на экране пронумерованы как рубрики.</p>
+        <h3>Движение</h3>
+        <p>Сдержанное: разделы проявляются по очереди, штамп статуса «прижимается» при смене, зачёркивание старого времени прорисовывается линией. При <code>prefers-reduced-motion</code> анимации отключаются полностью.</p>
+        <h3>Компьютер</h3>
+        <div class="desk" style="background:#F4EFE6;grid-template-columns:1.4fr 1fr 1fr;grid-template-rows:18px 1.3fr 1fr">
+          <i style="background:#17140F;grid-column:1/4"></i>
+          <i style="background:#FBF8F2;border:1px solid #D9D1C3;grid-row:2/4"></i>
+          <i style="background:#FBF8F2;border:1px solid #D9D1C3"></i>
+          <i style="background:#FBF8F2;border:1px solid #D9D1C3"></i>
+          <i style="background:#C8371F;opacity:.85"></i>
+          <i style="background:#FBF8F2;border:1px solid #D9D1C3"></i>
+        </div>
+        <p style="margin-top:6px">Шапка-«мастхед» с разделами сверху, под ней три газетные колонки: главный материал дня, изменения и дедлайны, заявки.</p>
+        <h3>Почему это наше</h3>
+        <p>Язык дипломатической почты и газетной полосы: рубрики, штампы, правка. Читается спокойно и «взросло», выделяется на фоне типичных кабинетов с карточками. Тёмная тема «Ночной выпуск» — тушь как фон, бумага как текст.</p>
+      </div>
+    </article>
+
+    <!-- ═════════ C ═════════ -->
+    <article class="col">
+      <header>
+        <div class="tag">Концепция C</div>
+        <h2>«Сигнал»</h2>
+        <p class="lead">Яркая плитка с жёсткими тенями и «наклейками». Каждый тип события имеет свой цвет и подпись, экран считывается за секунду.</p>
+      </header>
+      <div class="phone-wrap"><div class="phone"><div class="c">
+        <div class="top">
+          <span class="lg"><i>mc</i>Пн, 16.11</span>
+          <span class="r">
+            <span class="sq"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14121F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7 2.5 7h-17S6 15 6 9Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><u>2</u></span>
+            <span class="sq">МС</span>
+          </span>
+        </div>
+        <h4>Привет, Мира!<br>Сегодня <span>3 пары</span></h4>
+
+        <div class="tile big">
+          <span class="stk">через 42 мин</span>
+          <div class="k">Следующая пара</div>
+          <div class="tm">10:40–12:10</div>
+          <p class="ttl">Теория международных отношений</p>
+          <div class="row"><span class="chip">ауд. 3041</span><span class="chip g">семинар</span><span class="chip g">Корнилова Е. А.</span></div>
+        </div>
+
+        <div class="tile mv">
+          <div>
+            <div class="k">Перенос</div>
+            <p>Английский язык</p>
+            <div class="tt"><s>12:30 · 2112</s> → 14:20 · 4017</div>
+          </div>
+          <span class="go"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C6F432" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+
+        <div class="two">
+          <div class="tile dl"><div class="k">Дедлайн</div><b>Эссе по политологии</b><span>завтра 23:59</span></div>
+          <div class="tile rq"><div class="k">Заявка</div><b>Справка об обучении</b><div class="dots"><i class="f"></i><i class="f"></i><i></i></div><span>на рассмотрении</span></div>
+        </div>
+
+        <div class="tile pl"><p><b>Окно 90 минут</b> в 12:30 — успеешь эссе.</p><span class="bt">В план</span></div>
+
+        <div class="nav">
+          <div class="on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg>Сегодня</div>
+          <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16"/></svg>Пары</div>
+          <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 20V11M12 20V5M19 20v-6"/></svg>Оценки</div>
+          <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h8l4 4v14H7z"/></svg>Заявки</div>
+          <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="6" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="18" cy="12" r="1.4"/></svg>Ещё</div>
+        </div>
+        <div class="disc">Конкурсный прототип · неофициальный сервис</div>
+      </div></div></div>
+      <p class="cap">360 px · светлая тема по умолчанию</p>
+
+      <div class="specs">
+        <h3>Палитра</h3>
+        <div class="sw">
+          <div style="background:#ECEAF5;color:#14121F"><b>фон</b>#ECEAF5</div>
+          <div style="background:#FFFFFF;color:#14121F"><b>карта</b>#FFFFFF</div>
+          <div style="background:#14121F;color:#fff"><b>тушь</b>#14121F</div>
+          <div style="background:#5E5A70;color:#fff"><b>подписи</b>#5E5A70</div>
+          <div style="background:#5B3DF5;color:#fff"><b>пара</b>#5B3DF5</div>
+          <div style="background:#C6F432;color:#14121F"><b>акцент</b>#C6F432</div>
+          <div style="background:#FF6A4D;color:#14121F"><b>перенос</b>#FF6A4D</div>
+          <div style="background:#14121F;color:#C6F432"><b>планер</b>#14121F</div>
+        </div>
+        <h3>Шрифты (SIL OFL 1.1, с кириллицей)</h3>
+        <p><span style="font:900 18px Geologica,sans-serif;color:#fff">Geologica</span> — заголовки и наклейки.<br><span style="font:600 15px Manrope,sans-serif;color:#fff">Manrope</span> — основной текст.<br><span style="font:700 13px 'JetBrains Mono',monospace;color:#fff">JetBrains Mono</span> — время и аудитории.</p>
+        <h3>Навигация</h3>
+        <p>Плотный «док» из пяти крупных кнопок внизу; активная залита лаймом с обводкой. Счётчик непрочитанных — наклейка на колокольчике.</p>
+        <h3>Движение</h3>
+        <p>Быстрое и тактильное: плитка при нажатии «вдавливается» на размер тени, наклейки слегка покачиваются при появлении. При <code>prefers-reduced-motion</code> остаётся только смена цвета.</p>
+        <h3>Компьютер</h3>
+        <div class="desk" style="background:#ECEAF5;grid-template-columns:70px 1.4fr 1fr 1fr;grid-template-rows:1.2fr 1fr">
+          <i style="background:#fff;border:2px solid #14121F;grid-row:1/3"></i>
+          <i style="background:#5B3DF5;border:2px solid #14121F"></i>
+          <i style="background:#FF6A4D;border:2px solid #14121F"></i>
+          <i style="background:#C6F432;border:2px solid #14121F"></i>
+          <i style="background:#fff;border:2px solid #14121F;grid-column:2/4"></i>
+          <i style="background:#14121F"></i>
+        </div>
+        <p style="margin-top:6px">Боковая панель с подписями слева и сетка плиток разного размера: день виден одним экраном без прокрутки.</p>
+        <h3>Почему это наше</h3>
+        <p>Собственная система «сигналов»: фиолетовый — пара, коралловый — перенос, лайм — срок. Смысл дублируется подписью, поэтому цвет не единственный носитель информации. Самый «молодёжный» и запоминающийся на видео вариант.</p>
+      </div>
+    </article>
+  </div>
+
+  <section class="cmp">
+    <h2>Сравнение</h2>
+    <table>
+      <tr><th></th><th>A · «Ночной рейс»</th><th>B · «Депеша»</th><th>C · «Сигнал»</th></tr>
+      <tr><th>Характер</th><td>Премиальный, технологичный, «ночной»</td><td>Умный, спокойный, редакционный</td><td>Дерзкий, энергичный, игровой</td></tr>
+      <tr><th>Сильная сторона</th><td>Сильная метафора (талон), эффектно смотрится на видео и тёмных экранах</td><td>Лучшая читаемость длинных списков: оценки, заявки, кабинет деканата</td><td>Мгновенно считывается тип события; самый запоминающийся</td></tr>
+      <tr><th>Риск</th><td>Тёмная тема хуже читается на солнце; свечения нужно дозировать, чтобы не выглядеть шаблонно</td><td>Может показаться недостаточно «молодёжным»; засечки требуют аккуратной вёрстки на 360 px</td><td>Яркость утомляет в плотных таблицах сотрудников; нужен спокойный режим для кабинета деканата</td></tr>
+      <tr><th>Кабинет сотрудников</th><td>Те же токены, плотные таблицы на тёмном</td><td>Подходит естественно: реестры и журналы</td><td>Приглушённый вариант: белые плитки, цвет только в статусах</td></tr>
+      <tr><th>Трудоёмкость</th><td>Средняя</td><td>Низкая–средняя</td><td>Средняя</td></tr>
+      <tr><th>Вторая тема</th><td>Светлая «День»</td><td>Тёмная «Ночной выпуск»</td><td>Тёмная с теми же сигнальными цветами</td></tr>
+    </table>
+  </section>
+
+  <div class="ask"><b>Что нужно от Димы:</b> выбрать A, B или C — либо комбинацию (например, «структура C, палитра A»). До выбора интерфейс собирается на нейтральном каркасе с токенами, так что переключение стиля не потребует переписывать экраны.</div>
+</div>
+</body>
+</html>
