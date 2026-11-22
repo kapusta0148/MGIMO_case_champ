@@ -26,7 +26,7 @@
 | Подключение языковой модели к планировщику, Web Push, вложения | **не сделано** |
 | Размещение в интернете (HTTPS, Yandex Cloud) | сделано 19.11, сквозные тесты на сайте пройдены |
 
-Подробно: [docs/TEST_REPORT.md](docs/TEST_REPORT.md), [docs/HANDOFF.md](docs/HANDOFF.md).
+О создании проекта и проведённых проверках — [описание процесса в PDF](docs/MGIMO_Campus_opisanie_processa.pdf).
 
 ## Стек
 
@@ -125,6 +125,6 @@ bash ops/deploy/check_production.sh
 ```
 backend/   Flask: app/models, app/services, app/api, app/security, app/seeds, migrations, tests
 frontend/  React: src/pages, src/components, src/api, e2e (Playwright)
-docs/      решения, журнал ИИ, отчёт о тестах, лицензии, сценарий демонстрации, снимки экрана
+docs/      описание процесса создания, лицензии, снимки экрана
 ops/       скрипты инициализации базы
 ```
